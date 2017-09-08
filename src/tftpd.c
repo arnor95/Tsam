@@ -57,7 +57,7 @@ struct dirent* readFile(char* dir_path, char* file_name)
 	return NULL;
 }
 
-/*void setUpUdp(int port)
+void setUpUdp(int port)
 {
     int sockfd;
     struct sockaddr_in server, client;
@@ -72,7 +72,11 @@ struct dirent* readFile(char* dir_path, char* file_name)
     // of host byte order. The macros htonl, htons convert the values.
     server.sin_addr.s_addr = htonl(INADDR_ANY);
     server.sin_port = htons(port);
-    bind(sockfd, (struct sockaddr *) &server, (socklen_t) sizeof(server));
+    int bindStatus = bind(sockfd, (struct sockaddr *) &server, (socklen_t) sizeof(server));
+	if (bindStatus < 0)
+	{
+		printf("Error bindStatus = -1")
+	}
 
     for (;;) {
         // Receive up to one byte less than declared, because it will
@@ -93,5 +97,5 @@ struct dirent* readFile(char* dir_path, char* file_name)
         sendto(sockfd, message, (size_t) n, 0,
                (struct sockaddr *) &client, len);
 	}
-	*/
+	
 //}
