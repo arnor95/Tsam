@@ -19,14 +19,14 @@ int main(int argc, char *argv[])
 	{
 		int port = getPort(argv);
 		char* dir = getDir(argv);
-		printf("%s",dir);
-		printf(" ""%d\n", port);
+		printf("%s\n",dir);
+		printf("""%d\n", port);
 		char* file_name = "example_data2";
 		readFile(dir, file_name);
 	}
 
 	else{
-		printf("Must have 2 parameters in main function!");
+		printf("Must have 2 parameters in main function!\n");
 	}
 	//setUpUdp(port);
 	return 0;
@@ -44,7 +44,7 @@ char* getDir(char *argv[])
 
 struct dirent* readFile(char* dir_path, char* file_name)
 {
-	FILE *a;
+	//FILE *a;
 
 	DIR *dir = opendir(dir_path);
 	if (dir == NULL)
@@ -56,10 +56,10 @@ struct dirent* readFile(char* dir_path, char* file_name)
 
 	while ((file = readdir(dir)) != NULL)
 	{
-		printf("Entered while loop");
+		printf("Entered while loop\n");
 		if (strcmp(file->d_name, file_name) == 0)
 		{
-			printf("Found file!");
+			printf("Found file!\n");
 			return file;
 		}
 		printf("%s\n", file->d_name);
@@ -85,7 +85,7 @@ void setUpUdp(int port)
     int bindStatus = bind(sockfd, (struct sockaddr *) &server, (socklen_t) sizeof(server));
 	if (bindStatus < 0)
 	{
-		printf("Error bindStatus = -1");
+		printf("Error bindStatus = -1\n");
 	}
 
     for (;;) {
@@ -107,5 +107,4 @@ void setUpUdp(int port)
         sendto(sockfd, message, (size_t) n, 0,
                (struct sockaddr *) &client, len);
 	}
-	
 }
