@@ -6,6 +6,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int getPort(char *argv[]);
 char* getDir(char *argv[]);
@@ -18,9 +19,9 @@ int main(int argc, char *argv[])
 	{
 		int port = getPort(argv);
 		char* dir = getDir(argv);
-		printf(dir);
-		printf(" ""%d", port);
-		char* file_name = "example_data1";
+		printf("%s",dir);
+		printf(" ""%d\n", port);
+		char* file_name = "example_data2";
 		readFile(dir, file_name);
 	}
 
@@ -43,16 +44,25 @@ char* getDir(char *argv[])
 
 struct dirent* readFile(char* dir_path, char* file_name)
 {
-	DIR * dir = opendir(dir_path);
+	FILE *a;
+
+	DIR *dir = opendir(dir_path);
+	if (dir == NULL)
+	{
+		printf("Dir is NULL  \n");
+	}
+
 	struct dirent* file;
 
-	while (file = readdir(dir) != NULL)
+	while ((file = readdir(dir)) != NULL)
 	{
-		if (strcmp(file, file_name) == 0)
+		printf("Entered while loop");
+		if (strcmp(file->d_name, file_name) == 0)
 		{
-			return file;
 			printf("Found file!");
+			return file;
 		}
+		printf("%s\n", file->d_name);
 	}
 	return NULL;
 }
@@ -75,7 +85,7 @@ void setUpUdp(int port)
     int bindStatus = bind(sockfd, (struct sockaddr *) &server, (socklen_t) sizeof(server));
 	if (bindStatus < 0)
 	{
-		printf("Error bindStatus = -1")
+		printf("Error bindStatus = -1");
 	}
 
     for (;;) {
@@ -98,4 +108,4 @@ void setUpUdp(int port)
                (struct sockaddr *) &client, len);
 	}
 	
-//}
+}
