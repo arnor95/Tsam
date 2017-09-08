@@ -11,7 +11,7 @@
 int getPort(char *argv[]);
 char* getDir(char *argv[]);
 struct dirent* readFile(char* dir_path, char* file_name);
-//void setUpUdp(port);
+void setUpUdp(int port, char* file_name );
 
 int main(int argc, char *argv[])
 {
@@ -22,13 +22,13 @@ int main(int argc, char *argv[])
 		printf("%s\n",dir);
 		printf("""%d\n", port);
 		char* file_name = "example_data2";
-		readFile(dir, file_name);
+		char* found_file = readFile(dir, file_name);
+		setUpUdp(port, found_file);
 	}
 
 	else{
 		printf("Must have 2 parameters in main function!\n");
 	}
-	//setUpUdp(port);
 	return 0;
 }
 
@@ -67,11 +67,11 @@ struct dirent* readFile(char* dir_path, char* file_name)
 	return NULL;
 }
 
-void setUpUdp(int port)
+void setUpUdp(int port, char* file_name)
 {
     int sockfd;
     struct sockaddr_in server, client;
-    char message[512];
+    
 
     // Create and bind a UDP socket.
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -92,19 +92,14 @@ void setUpUdp(int port)
         // Receive up to one byte less than declared, because it will
         // be NUL-terminated later.
         socklen_t len = (socklen_t) sizeof(client);
-        ssize_t n = recvfrom(sockfd, message, sizeof(message) - 1,
+        ssize_t n = recvfrom(sockfd, file_name, sizeof(file_name) - 1,
                              0, (struct sockaddr *) &client, &len);
 
-        message[n] = '\0';
-        fprintf(stdout, "Received:\n%s\n", message);
+        file_name[n] = '\0';
+        fprintf(stdout, "Received:\n%s\n", file_name);
         fflush(stdout);
 
-        // convert message to upper case.
-        for (int i = 0; i < n; ++i) {
-            message[i] = toupper(message[i]);
-        }
-
-        sendto(sockfd, message, (size_t) n, 0,
+        sendto(sockfd, file_name, (size_t) n, 0,
                (struct sockaddr *) &client, len);
 	}
 }
